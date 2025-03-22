@@ -5,6 +5,9 @@ from time import sleep
 
 logger = Logger()
 
+will_send = input("Will you send message? (y/n): ")
+
+logger.log_print(will_send)
 logger.log_print("Script started")
 
 try:

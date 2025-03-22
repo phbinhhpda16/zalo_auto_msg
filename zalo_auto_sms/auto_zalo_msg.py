@@ -87,14 +87,14 @@ class AutoZaloMsg:
                 self.sent_status = 'duplicated account'
                 return False
 
-    def send_message(self, message_lines):
+    def send_message(self, message_lines, will_send):
         for index, line in enumerate(message_lines):
             message_box = self.wait.until(EC.presence_of_element_located((By.ID, f"input_line_{index}")))
             message_box.send_keys(line)
             if index != len(message_lines)-1:
                 message_box.send_keys(Keys.SHIFT + Keys.RETURN)
-
-        # message_box.send_keys(Keys.RETURN)
+            elif will_send == 'y':
+                message_box.send_keys(Keys.RETURN)
         self.sent_status = 'sent'
 
     def quit(self):
