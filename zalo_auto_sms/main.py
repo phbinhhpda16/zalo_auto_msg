@@ -35,7 +35,7 @@ try:
 
         for index, driver_data in data.iterrows():
             driver_phone = driver_data['phone']
-            driver_name = driver_data['name']
+            driver_name = driver_data['name'].title()
             attempt = auto_msg.attempt_search + 1
             message_lines = [
                 line if line.strip() else ' '
