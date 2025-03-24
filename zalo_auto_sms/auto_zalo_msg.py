@@ -34,22 +34,29 @@ class AutoZaloMsg:
 
     def open_zalo(self):
         self.driver.get("https://chat.zalo.me/")
-        self.driver.maximize_window()
 
     def check_login(self):
-        for attempt in range(2):
+        while self.attempt_login < 5 and not self.is_logged_in:
+            print(f"Attempt {self.attempt_login + 1}: Checking login status...")
             try:
-                if attempt == 0:
-                    self.wait.until(EC.presence_of_element_located((By.CLASS_NAME, "qrcode")))
+                qr_code_present = self.wait.until(EC.presence_of_element_located((By.CLASS_NAME, "qrcode")))
+
+                if qr_code_present:
+                    print("QR code still present. Waiting for next attempt...")
+                    self.is_logged_in = False
                 else:
-                    WebDriverWait(self.driver, 0).until(EC.presence_of_element_located((By.CLASS_NAME, "qrcode")))
+                    print("QR code disappeared. Login successful.")
+                    self.is_logged_in = True
+                    break
             except:
+                print("QR code not found. Assuming login successful.")
                 self.is_logged_in = True
-            else:
-                sleep(25)
-                self.is_logged_in = False
-            finally:
-                return self.is_logged_in
+                break  #
+
+            time.sleep(5)
+            self.attempt_login += 1
+
+        return self.is_logged_in
 
     def search_driver(self, driver_phone):
         search_box = self.wait.until(EC.presence_of_element_located((By.ID, "contact-search-input")))
@@ -60,7 +67,6 @@ class AutoZaloMsg:
         search_box.send_keys(driver_phone)
 
     def has_exist_driver(self):
-        time.sleep(1)
         try:
             time.sleep(1)
             friend_item = self.wait.until(EC.element_to_be_clickable((By.CLASS_NAME, "gridv2.conv-item.conv-rel")))
