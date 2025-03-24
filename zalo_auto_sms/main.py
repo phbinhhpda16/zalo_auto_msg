@@ -26,8 +26,8 @@ try:
     auto_msg.open_zalo()
 
     logger.log_print("Check loggin status")
-    is_logged_in = False
 
+    sleep(5)
     if not auto_msg.check_login():
         logger.log_print("Logging error, please try again")
     else:
@@ -45,13 +45,18 @@ try:
 
             logger.log_print(f'Contact #{attempt}:')
             logger.log_print(f'Processing {driver_phone} - {driver_name}')
+            sleep(2)
             auto_msg.search_driver(driver_phone)
 
+            sleep(2)
             if auto_msg.has_exist_driver():
+                logger.log_print("Driver found")
+                sleep(2)
                 if auto_msg.is_new_account():
                     driver_account = auto_msg.driver_account
                     logger.log_print(f'Driver Zalo Account: {driver_account}')
-                    auto_msg.send_message(message_lines)
+                    sleep(2)
+                    auto_msg.send_message(message_lines, will_send)
                     logger.log_print("Message sent successfully")
                 else:
                     driver_account = auto_msg.driver_account
